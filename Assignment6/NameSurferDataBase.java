@@ -10,6 +10,10 @@
  */
 
 import acm.util.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class NameSurferDataBase implements NameSurferConstants {
@@ -23,17 +27,54 @@ public class NameSurferDataBase implements NameSurferConstants {
  */
 	public NameSurferDataBase(String filename) {
 		// You fill this in //
+		 rd = openFile(filename);
+		 try {
+			 while(true) {
+				 String line = rd.readLine();
+				 if(line==null)break;
+				  pk = new NameSurferEntry(line);
+				  checkname.put(pk.getName(), pk);		
+			 }
+			 rd.close();
+		 }catch(IOException ex) {
+			 throw new ErrorException(ex);
+		 }
+		 
 	}
 	
+	private BufferedReader openFile(String prompt) {
+		rd = null;
+		while(rd==null) {
+			try {
+				String filename = prompt;
+			rd = new BufferedReader(new FileReader(filename));	
+			}catch(IOException ex) {
+				throw new ErrorException(ex);
+			}
+       	}
+		return rd;
+	}
 /* Method: findEntry(name) */
 /**
  * Returns the NameSurferEntry associated with this name, if one
  * exists.  If the name does not appear in the database, this
  * method returns null.
  */
+	
 	public NameSurferEntry findEntry(String name) {
 		// You need to turn this stub into a real implementation //
-		return null;
+		char convertname = name.charAt(0);
+		if(Character.isLowerCase(convertname)) {
+			convertname = Character.toUpperCase(convertname);		
+		}
+		String remaining = name.substring(1);
+		remaining = remaining.toLowerCase();
+		 name = convertname+remaining;
+		return checkname.get(name);
 	}
-}
+	
 
+private NameSurferEntry pk;
+private BufferedReader rd;
+private HashMap<String,NameSurferEntry> checkname = new HashMap<String,NameSurferEntry>();
+}

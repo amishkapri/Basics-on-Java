@@ -17,7 +17,22 @@ public class NameSurfer extends Program implements NameSurferConstants {
  * and initializing the interactors at the top of the window.
  */
 	public void init() {
-	    // You fill this in, along with any helper methods //
+    // add different interactive interface
+		name = new JLabel("Name");
+		entry = new JTextField(20);
+		graph = new JButton("Graph");
+		clear = new JButton("Clear");
+		em = new NameSurferDataBase("names-data.txt");
+		add(name,SOUTH);
+		add(entry,SOUTH);
+		add(graph,SOUTH);
+		add(clear,SOUTH);
+	    display = new NameSurferGraph();
+	    add(display);
+	    addActionListeners();
+	    entry.addActionListener(this);
+	    
+		
 	}
 
 /* Method: actionPerformed(e) */
@@ -28,5 +43,25 @@ public class NameSurfer extends Program implements NameSurferConstants {
  */
 	public void actionPerformed(ActionEvent e) {
 		// You fill this in //
+		if(e.getSource()==entry || e.getSource()==graph) {
+			NameSurferEntry p = em.findEntry(entry.getText());
+	//		println("Graph:"+ p.toString()) ; 
+			display.addEntry(p);
+			display.update();
+		}
+	    if(e.getSource()==clear) {
+	//    	println("Clear ALl");
+	    	display.clear();	
+	    	display.update();
+		}
+		
 	}
+	// instance variables
+	private JButton graph;
+	private JLabel name;
+	private JButton clear;
+	private JTextField entry;
+	private NameSurferDataBase em;
+	private NameSurferGraph display= new NameSurferGraph();
+	
 }
